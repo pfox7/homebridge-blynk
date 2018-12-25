@@ -163,7 +163,7 @@ class Blynk {
 			switch (widget) {
 				case "Switch":
 					let v = value ? "1" : "0";
-					request(this.config.serverurl + '/' + this.config.token + '/update/' + pinString + "?value=" + v, function (error, response, body) {
+					request(this.config.serverurl + '/' + token + '/update/' + pinString + "?value=" + v, function (error, response, body) {
 						if (!error && mode == "PUSH") {
 							// In order to behave like a push button reset the status to off
 							setTimeout(function () {
