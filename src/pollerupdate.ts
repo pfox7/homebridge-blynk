@@ -58,16 +58,17 @@ export class Poller {
             let name = params[0];
             let widget = params[1];        
             let pinString = params[2];
+            let token = params[3];
 			if (name == accessory.name) {
-                getBlynkvalue(name, widget, pinString, null, subscription.characteristic, this.hapCharacteristic, this.platform);
+                getBlynkvalue(name, widget, pinString, token, null, subscription.characteristic, this.hapCharacteristic, this.platform);
 			}
 		}
     }
 
 }
 
-export function getBlynkvalue(name, widget, pinString, callback, characteristic, Characteristic, platform) {
-    request(platform.config.serverurl + '/' + platform.config.token + '/get/' + pinString, function (error, response, body) {
+export function getBlynkvalue(name, widget, pinString, token, callback, characteristic, Characteristic, platform) {
+    request(platform.config.serverurl + '/' + token + '/get/' + pinString, function (error, response, body) {
         // console.log('Status:', response.statusCode);
         // console.log('Headers:', JSON.stringify(response.headers));
         // console.log('Response:', body);
