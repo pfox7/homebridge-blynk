@@ -44,14 +44,15 @@ class Poller {
 			let widget = params[1];
 			let pinString = params[2];
 			let token = params[3];
+			let mode = params[4];
 			if (name == accessory.name) {
-				getBlynkvalue(name, widget, pinString, token, null, subscription.characteristic, this.hapCharacteristic, this.platform);
+				getBlynkvalue(name, widget, pinString, token, mode, null, subscription.characteristic, this.hapCharacteristic, this.platform);
 			}
 		}
 	}
 }
 exports.Poller = Poller;
-function getBlynkvalue(name, widget, pinString, token, callback, characteristic, Characteristic, platform) {
+function getBlynkvalue(name, widget, pinString, token, mode, callback, characteristic, Characteristic, platform) {
 	request(platform.config.serverurl + '/' + token + '/get/' + pinString, function (error, response, body) {
 		if (!error && response.statusCode == 200 && body != undefined) {
 			// console.log('Status:', response.statusCode);
