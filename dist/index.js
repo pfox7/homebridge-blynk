@@ -162,9 +162,9 @@ class Blynk {
 			this.log("Setting value to device: ", `${name}, parameter: ${characteristic.displayName}, value: ${value}`);
 			switch (widget) {
 				case "Switch":
-					let v = value ? "1" : "0";
+					let v = (mode == "REVERSESWITCH" || mode == "REVERSEPUSH") ? (value ? "0" : "1") : (value ? "1" : "0");
 					request(this.config.serverurl + '/' + token + '/update/' + pinString + "?value=" + v, function (error, response, body) {
-						if (!error && mode == "PUSH") {
+						if (!error && (mode == "PUSH" || mode == "REVERSEPUSH")) {
 							// In order to behave like a push button reset the status to off
 							setTimeout(function () {
 								characteristic.setValue(false, undefined, 'fromSetValue');
