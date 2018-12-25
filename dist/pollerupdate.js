@@ -53,43 +53,45 @@ class Poller {
 exports.Poller = Poller;
 function getBlynkvalue(name, widget, pinString, token, callback, characteristic, Characteristic, platform) {
 	request(platform.config.serverurl + '/' + token + '/get/' + pinString, function (error, response, body) {
-		// console.log('Status:', response.statusCode);
-		// console.log('Headers:', JSON.stringify(response.headers));
-		// console.log('Response:', body);
-		function returnValue(r, callback, characteristic) {
-			if (callback) {
-				platform.log("Getting value for device: ", `${name}  parameter: ${characteristic.displayName}, value: ${r}`);
-				callback(undefined, r);
+		if (!error && response.statusCode == 200 && body != undefined) {
+			// console.log('Status:', response.statusCode);
+			// console.log('Headers:', JSON.stringify(response.headers));
+			// console.log('Response:', body);
+			function returnValue(r, callback, characteristic) {
+				if (callback) {
+					platform.log("Getting value for device: ", `${name}  parameter: ${characteristic.displayName}, value: ${r}`);
+					callback(undefined, r);
+				}
+				else {
+					platform.log("Updating value for device: ", `${name}  parameter: ${characteristic.displayName}, value: ${r}`);
+					characteristic.updateValue(r);
+				}
 			}
-			else {
-				platform.log("Updating value for device: ", `${name}  parameter: ${characteristic.displayName}, value: ${r}`);
-				characteristic.updateValue(r);
+			switch (widget) {
+				case "Switch":
+					returnValue((body == "[\"1\"]"), callback, characteristic);
+					break;
+				case "ContactSensor":
+					returnValue((body == "[\"1\"]") ? Characteristic.ContactSensorState.CONTACT_DETECTED : Characteristic.ContactSensorState.CONTACT_NOT_DETECTED, callback, characteristic);
+					break;
+				case "TemperatureSensor":
+					returnValue(parseFloat(JSON.parse(body)), callback, characteristic);
+					break;
+				case "HumiditySensor":
+					returnValue(parseFloat(JSON.parse(body)), callback, characteristic);
+					break;
+				case "MotionSensor":
+					returnValue((body == "[\"1\"]"), callback, characteristic);
+					break;
+				case "SmokeSensor":
+					returnValue((body == "[\"1\"]") ? Characteristic.SmokeDetected.SMOKE_DETECTED : Characteristic.SmokeDetected.SMOKE_NOT_DETECTED, callback, characteristic);
+					break;
+				case "LightSensor":
+					returnValue(parseFloat(JSON.parse(body)), callback, characteristic);
+					break;
+				default:
+					break;
 			}
-		}
-		switch (widget) {
-			case "Switch":
-				returnValue((body == "[\"1\"]"), callback, characteristic);
-				break;
-			case "ContactSensor":
-				returnValue((body == "[\"1\"]") ? Characteristic.ContactSensorState.CONTACT_DETECTED : Characteristic.ContactSensorState.CONTACT_NOT_DETECTED, callback, characteristic);
-				break;
-			case "TemperatureSensor":
-				returnValue(parseFloat(JSON.parse(body)), callback, characteristic);
-				break;
-			case "HumiditySensor":
-				returnValue(parseFloat(JSON.parse(body)), callback, characteristic);
-				break;
-			case "MotionSensor":
-				returnValue((body == "[\"1\"]"), callback, characteristic);
-				break;
-			case "SmokeSensor":
-				returnValue((body == "[\"1\"]") ? Characteristic.SmokeDetected.SMOKE_DETECTED : Characteristic.SmokeDetected.SMOKE_NOT_DETECTED, callback, characteristic);
-				break;
-			case "LightSensor":
-				returnValue(parseFloat(JSON.parse(body)), callback, characteristic);
-				break;
-			default:
-				break;
 		}
 	});
 }
