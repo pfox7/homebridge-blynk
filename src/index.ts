@@ -203,7 +203,7 @@ class Blynk {
 
 	setCharacteristicValue(value, callback, context, characteristic, service) {
 		if( context !== 'fromPoller' && context !== 'fromSetValue') {
-			let params = service.subtype.split("-"); // params[0]: name, params[1]: widget, params[2]: pin, params[3]: mode
+			let params = service.subtype.split("-"); // params[0]: name, params[1]: widget, params[2]: pin, params[3]: token, params[4]: mode
 			let name = params[0];        
 			let widget = params[1];        
 			let pinString = params[2];
@@ -232,7 +232,7 @@ class Blynk {
 
 	getCharacteristicValue(callback, characteristic, service) {
 		this.log("Getting value from device: ", `parameter: ${characteristic.displayName}`);
-		let params = service.subtype.split("-"); // params[0]: name, params[1]: widget, params[2]: pin, params[3]: mode
+		let params = service.subtype.split("-"); // params[0]: name, params[1]: widget, params[2]: pin, params[3]: token, params[4]: mode
 		let name = params[0];        
 		let widget = params[1];        
 		let pinString = params[2];
