@@ -53,13 +53,13 @@
 
 import request = require("request");
 import {
-    pluginName,
-    platformName, 
-    BlynkAccessory
+	pluginName,
+	platformName, 
+	BlynkAccessory
 } from './blynkaccessory'
 import {
-    Poller,
-    getBlynkvalue
+	Poller,
+	getBlynkvalue
 } from './pollerupdate'
 
 const defaultPollerPeriod = 1;
@@ -70,59 +70,59 @@ let Accessory,
 	UUIDGen;
 
 export = function (homebridge) {
-    Accessory = homebridge.platformAccessory
-    Service = homebridge.hap.Service
-    Characteristic = homebridge.hap.Characteristic
-    UUIDGen = homebridge.hap.uuid
-    homebridge.registerPlatform(pluginName, platformName, Blynk, true)
+	Accessory = homebridge.platformAccessory
+	Service = homebridge.hap.Service
+	Characteristic = homebridge.hap.Characteristic
+	UUIDGen = homebridge.hap.uuid
+	homebridge.registerPlatform(pluginName, platformName, Blynk, true)
 }
 
 class Config {
 	name: string;
 	serverurl: string;
-    token: string;
-    pollerperiod?: string;
-    accessories: string;
+	token: string;
+	pollerperiod?: string;
+	accessories: string;
 
-    constructor() {
-        this.name = "";
-        this.serverurl = "";
-        this.token = "";
-        this.pollerperiod = "";
-        this.accessories = "";
-    }
+	constructor() {
+		this.name = "";
+		this.serverurl = "";
+		this.token = "";
+		this.pollerperiod = "";
+		this.accessories = "";
+	}
 }
 
 class Blynk {
 	log: (format: string, message: any) => void;
 	config: Config;
-  	api: any;
-    accessories: Map<string, any>;
-    poller: Poller;
+	api: any;
+	accessories: Map<string, any>;
+	poller: Poller;
 	updateSubscriptions: Array<Object>;
 
-    constructor (log: (format: string, message: any) => void, config: Config, api: any) {
-    	this.log = log;
-    	this.api = api;
+	constructor (log: (format: string, message: any) => void, config: Config, api: any) {
+		this.log = log;
+		this.api = api;
 
 		this.accessories = new Map();
-        this.updateSubscriptions = new Array();
+		this.updateSubscriptions = new Array();
 		this.config = config;
 		
 		let pollerPeriod = this.config.pollerperiod ? parseInt(this.config.pollerperiod) : defaultPollerPeriod;
-  		if (isNaN(pollerPeriod) || pollerPeriod < 1 || pollerPeriod > 100)
-  			pollerPeriod = defaultPollerPeriod;
-        this.poller = new Poller(this, pollerPeriod, Service, Characteristic);
+		if (isNaN(pollerPeriod) || pollerPeriod < 1 || pollerPeriod > 100)
+			pollerPeriod = defaultPollerPeriod;
+		this.poller = new Poller(this, pollerPeriod, Service, Characteristic);
 
-    	this.api.on('didFinishLaunching', this.didFinishLaunching.bind(this));
-  	}
-  	didFinishLaunching () { 
-	    this.log('didFinishLaunching.', '')
+		this.api.on('didFinishLaunching', this.didFinishLaunching.bind(this));
+	}
+	didFinishLaunching () { 
+		this.log('didFinishLaunching.', '')
 		this.LoadAccessories(this.config.accessories);    		
-  	}
-  	configureAccessory (accessory) {
-        this.log("Configured Accessory: ", accessory.displayName);
-        for (let s = 0; s < accessory.services.length; s++) {
+	}
+	configureAccessory (accessory) {
+		this.log("Configured Accessory: ", accessory.displayName);
+		for (let s = 0; s < accessory.services.length; s++) {
 			let service = accessory.services[s];
 			for (let i = 0; i < service.characteristics.length; i++) {
 				let characteristic = service.characteristics[i];
@@ -132,12 +132,12 @@ class Blynk {
 		}
 		this.accessories.set(accessory.context.uniqueSeed, accessory);
 		accessory.reachable = true;
-  	}
-  	LoadAccessories(accessories) {
-        this.log('Loading accessories', '');
-        if (accessories == null || accessories.length == 0) {
-            return;
-        }
+	}
+	LoadAccessories(accessories) {
+		this.log('Loading accessories', '');
+		if (accessories == null || accessories.length == 0) {
+			return;
+		}
 		accessories.map((s, i, a) => {
 			this.addAccessory(BlynkAccessory.createBlynkAccessory(s, Accessory, Service, Characteristic, this));
 		});
@@ -148,15 +148,15 @@ class Blynk {
 			if (!a.reviewed) {
 				this.removeAccessory(a);
 			}
-        }
-        
-        // Start the poller update mechanism
+		}
+		
+		// Start the poller update mechanism
 		this.poller.poll();
 	}
-  	addAccessory (blynkAccessory) {
-  		if (blynkAccessory == undefined)
-              return;
-              
+	addAccessory (blynkAccessory) {
+		if (blynkAccessory == undefined)
+			  return;
+			  
 		let uniqueSeed = blynkAccessory.name;
 		let isNewAccessory = false;
 		let a:any = this.accessories.get(uniqueSeed);
@@ -177,10 +177,10 @@ class Blynk {
 		// Register or update platform accessory
 		blynkAccessory.registerUpdateAccessory(isNewAccessory, this.api);
 		this.log("Added/changed accessory: ", blynkAccessory.name);
-  	}
+	}
 
 	removeAccessory (accessory) {
-	    this.log('Remove accessory', accessory.displayName);
+		this.log('Remove accessory', accessory.displayName);
 		this.api.unregisterPlatformAccessories(pluginName, platformName, [accessory]);
 		this.accessories.delete(accessory.context.uniqueSeed);
 	}
@@ -192,49 +192,52 @@ class Blynk {
 		});
 		characteristic.on('get', (callback) => {
 			this.getCharacteristicValue(callback, characteristic, service);
-        });
-        
-        this.subscribeUpdate(service, characteristic); 
+		});
+		
+		this.subscribeUpdate(service, characteristic); 
 	}
 
 	subscribeUpdate(service, characteristic) {
 		this.updateSubscriptions.push({'service': service, 'characteristic': characteristic});
 	}
 
-    setCharacteristicValue(value, callback, context, characteristic, service) {
+	setCharacteristicValue(value, callback, context, characteristic, service) {
 		if( context !== 'fromPoller' && context !== 'fromSetValue') {
-            let params = service.subtype.split("-"); // params[0]: name, params[1]: widget, params[2]: pin, params[3]: mode
-            let name = params[0];        
-            let widget = params[1];        
-            let pinString = params[2];
-            let mode = params[3];
+			let params = service.subtype.split("-"); // params[0]: name, params[1]: widget, params[2]: pin, params[3]: mode
+			let name = params[0];        
+			let widget = params[1];        
+			let pinString = params[2];
+			let token = params[3];
+			let mode = params[4];
 			this.log("Setting value to device: ", `${name}, parameter: ${characteristic.displayName}, value: ${value}`);
-            switch (widget) {
-                case "Switch":
-                    let v = value ? "1" : "0";
-                    request(this.config.serverurl + '/' + this.config.token + '/update/' + pinString + "?value=" + v, function (error, response, body) {
-                        if (!error && mode == "PUSH") {
-                            // In order to behave like a push button reset the status to off
-                            setTimeout( function(){
-                                characteristic.setValue(false, undefined, 'fromSetValue');
-                            }, 100 );
-                        }
-                    })
-                    break;
-                default:
-                    break
-            }
-        }
+			switch (widget) {
+				case "Switch":
+					let v = value ? "1" : "0";
+					request(this.config.serverurl + '/' + token + '/update/' + pinString + "?value=" + v, function (error, response, body) {
+						if (!error && mode == "PUSH") {
+							// In order to behave like a push button reset the status to off
+							setTimeout( function(){
+								characteristic.setValue(false, undefined, 'fromSetValue');
+							}, 100 );
+						}
+					})
+					break;
+				default:
+					break
+			}
+		}
 		callback();
 	}
 	
 
-    getCharacteristicValue(callback, characteristic, service) {
-        this.log("Getting value from device: ", `parameter: ${characteristic.displayName}`);
+	getCharacteristicValue(callback, characteristic, service) {
+		this.log("Getting value from device: ", `parameter: ${characteristic.displayName}`);
 		let params = service.subtype.split("-"); // params[0]: name, params[1]: widget, params[2]: pin, params[3]: mode
-        let name = params[0];        
-        let widget = params[1];        
-        let pinString = params[2];
-        getBlynkvalue(name, widget, pinString, callback, characteristic, Characteristic, this);
+		let name = params[0];        
+		let widget = params[1];        
+		let pinString = params[2];
+		let token = params[3];
+		let mode = params[4];
+		getBlynkvalue(name, widget, pinString, token, callback, characteristic, Characteristic, this);
 	}
 }
