@@ -141,7 +141,7 @@ export class BlynkAccessory {
             default:
                 return undefined;
         }
-        controlService.subtype = device.name + "-" + device.widget + "-" + device.pin;
+        controlService.subtype = device.name + "-" + device.widget + "-" + device.pin + "-" + device.token;
         if (device.mode != undefined)
             controlService.subtype = controlService.subtype + "-" + device.mode;
 		let bs = [new BlynkService(controlService, controlCharacteristics)];
