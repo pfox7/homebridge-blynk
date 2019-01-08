@@ -70,7 +70,7 @@ function getBlynkvalue(name, widget, pinString, token, mode, callback, character
 			}
 			switch (widget) {
 				case "Switch":
-					returnValue((body == "[\"1\"]"), callback, characteristic);
+					returnValue(((mode == "REVERSESWITCH" || mode == "REVERSEPUSH") ? (body != "[\"1\"]") : (body == "[\"1\"]")), callback, characteristic);
 					break;
 				case "ContactSensor":
 					returnValue((body == "[\"1\"]") ? Characteristic.ContactSensorState.CONTACT_DETECTED : Characteristic.ContactSensorState.CONTACT_NOT_DETECTED, callback, characteristic);
