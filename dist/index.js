@@ -186,7 +186,7 @@ class Blynk {
 		let pinString = params[2];
 		let token = params[3];
 		let mode = params[4];
-		pollerupdate_1.getBlynkvalue(name, widget, pinString, token, callback, characteristic, Characteristic, this);
+		pollerupdate_1.getBlynkvalue(name, widget, pinString, token, mode, callback, characteristic, Characteristic, this);
 	}
 }
 module.exports = function (homebridge) {
