@@ -1,43 +1,53 @@
 {
-    "bridge": {
-        "name": "Homebridge",
-        "username": "CC:22:3D:E3:CE:30",
-        "port": 51826,
-        "pin": "031-45-154"
-    },
-    
-    "description": "This is an example configuration file. You can use this as a template for creating your own configuration file.",
-
-    "platforms": [
-        {
-            "platform": "Blynk",
-            "name": "Blynk",
-            "serverurl": "PUT THE URL OF THE BLYNK SERVER HERE, e.g.: http://10.0.0.102:8080",
-            "token" : "PUT YOUR PROJECT AUTHORIZATION TOKEN HERE",
-            "pollerperiod": "PUT 0 FOR DISABLING POLLING, 1 - 100 INTERVAL IN SECONDS. 1 SECONDS IS THE DEFAULT",
-            "accessories": [
-            	{
-                    "name": 		"Switch1",
-                    "widget":		"Switch",
-                    "mode": 		"SWITCH",
-                    "caption": 		"Main Lamp",
-                    "pin": 			"D3"
-            	},
-            	{
-                	"name": 		"ContactSensor1",
-                    "widget":		"ContactSensor",
-                    "caption": 		"Main Door",
-                    "pin": 			"D2"
-            	},
-            	{
-                	"name": 		"TemperatureSensor1",
-                    "widget":		"TemperatureSensor",
-                    "caption": 		"Kitchen Temperature",
-                    "pin": 			"A17"
-            	}
-            ]
-        }
-    ],
-    "accessories": [
-    ]
+	"bridge": {
+		"name": "Homebridge",
+		"username": "CC:22:3D:E3:CE:30",
+		"port": 51826,
+		"pin": "123-45-678"
+	},
+	"description": "Конфигурация Тенисного домика",
+	"platforms": [
+		{
+			"platform": "config",
+			"name": "Config",
+			"port": 8080
+		},
+		{
+			"platform": "Blynk",
+			"name": "Sweet home",
+			"dashboardName": "Sweet home",
+			"serverurl": "http://blynk-cloud.com",
+			"pollerperiod": "1",
+			"accessories": [
+				{
+					"name": "Температура гостинная",
+					"widget": "TemperatureSensor",
+					"caption": "Температура гостинная",
+					"pin": "V2",
+					"token": "b5423a438c5245bdba0bf788aa22f9dc"
+				},
+				{
+					"name": "Влажность гостинная",
+					"widget": "HumiditySensor",
+					"caption": "Влажность гостинная",
+					"pin": "V3",
+					"token": "b5423a438c5245bdba0bf788aa22f9dc"
+				}
+			]
+		}
+	],
+	"accessories": [
+		{
+			"accessory": "Thermostat",
+			"name": "Пол гостинная",
+			"apiroute": "http://blynk-cloud.com/b5423a438c5245bdba0bf788aa22f9dc",
+			"maxTemp": 45,
+			"minTemp": 5,
+			"switchPin": "D3",
+			"temperaturePin": "V2",
+			"humidityPin": "V3",
+			"targetTemperaturePin": "V4",
+			"targetHeatingCoolingStatePin": "V6"
+		}
+	]
 }
