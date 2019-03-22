@@ -1,7 +1,7 @@
 {
 	"bridge": {
-		"name": "Homebridge",
-		"username": "CC:22:3D:E3:CE:30",
+		"name": "Homebridge-test",
+		"username": "CC:22:3D:E3:CE:31",
 		"port": 51826,
 		"pin": "123-45-678"
 	},
@@ -44,6 +44,42 @@
 			"maxTemp": 45,
 			"minTemp": 5,
 			"switchPin": "D3",
+			"temperaturePin": "V2",
+			"humidityPin": "V3",
+			"targetTemperaturePin": "V4",
+			"targetHeatingCoolingStatePin": "V6"
+		},
+		{
+			"accessory": "Thermostat",
+			"name": "Пол спальня",
+			"apiroute": "http://blynk-cloud.com/39deea9bb4d24807beea48e1ca2912f4",
+			"maxTemp": 45,
+			"minTemp": 5,
+			"switchPin": "V18",
+			"temperaturePin": "V12",
+			"humidityPin": "V13",
+			"targetTemperaturePin": "V14",
+			"targetHeatingCoolingStatePin": "V16"
+		},
+		{
+			"accessory": "Thermostat",
+			"name": "Пол ванная",
+			"apiroute": "http://blynk-cloud.com/8ea301a811134025aea8e4d1d63bb37d",
+			"maxTemp": 45,
+			"minTemp": 5,
+			"switchPin": "D0",
+			"temperaturePin": "V2",
+			"humidityPin": "V3",
+			"targetTemperaturePin": "V4",
+			"targetHeatingCoolingStatePin": "V6"
+		},
+		{
+			"accessory": "Thermostat",
+			"name": "Пол кабинет",
+			"apiroute": "http://blynk-cloud.com/39deea9bb4d24807beea48e1ca2912f4",
+			"maxTemp": 45,
+			"minTemp": 5,
+			"switchPin": "V8",
 			"temperaturePin": "V2",
 			"humidityPin": "V3",
 			"targetTemperaturePin": "V4",
