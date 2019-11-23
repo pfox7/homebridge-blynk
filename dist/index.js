@@ -153,12 +153,13 @@ class Blynk {
 	}
 	setCharacteristicValue(value, callback, context, characteristic, service) {
 		if (context !== 'fromPoller' && context !== 'fromSetValue') {
-			let params = service.subtype.split("-"); // params[0]: name, params[1]: widget, params[2]: pin, params[3]: token, params[4]: mode
+			let params = service.subtype.split("-"); // params[0]: name, params[1]: widget, params[2]: pin, params[3]: token, params[4]: mode, params[5]: pinStatus
 			let name = params[0];
 			let widget = params[1];
 			let pinString = params[2];
 			let token = params[3];
 			let mode = params[4];
+			let pinStatus = params[5];
 			this.log("Setting value to device: ", `${name}, parameter: ${characteristic.displayName}, value: ${value}`);
 			switch (widget) {
 				case "Switch":
@@ -180,13 +181,14 @@ class Blynk {
 	}
 	getCharacteristicValue(callback, characteristic, service) {
 		this.log("Getting value from device: ", `parameter: ${characteristic.displayName}`);
-		let params = service.subtype.split("-"); // params[0]: name, params[1]: widget, params[2]: pin, params[3]: token, params[4]: mode
+		let params = service.subtype.split("-"); // params[0]: name, params[1]: widget, params[2]: pin, params[3]: token, params[4]: mode, params[5]: pinStatus
 		let name = params[0];
 		let widget = params[1];
 		let pinString = params[2];
 		let token = params[3];
 		let mode = params[4];
-		pollerupdate_1.getBlynkvalue(name, widget, pinString, token, mode, callback, characteristic, Characteristic, this);
+		let pinStatus = params[5];
+		pollerupdate_1.getBlynkvalue(name, widget, pinString, token, mode, pinStatus, callback, characteristic, Characteristic, this);
 	}
 }
 module.exports = function (homebridge) {
