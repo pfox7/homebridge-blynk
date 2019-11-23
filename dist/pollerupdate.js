@@ -39,32 +39,33 @@ class Poller {
 		for (let i = 0; i < this.platform.updateSubscriptions.length; i++) {
 			let subscription = this.platform.updateSubscriptions[i];
 			let service = subscription.service;
-			let params = service.subtype.split("-"); // params[0]: name, params[1]: widget, params[2]: pin, params[3]: token, params[4]: mode
+			let params = service.subtype.split("-"); // params[0]: name, params[1]: widget, params[2]: pin, params[3]: token, params[4]: mode, params[5]: pinStatus
 			let name = params[0];
 			let widget = params[1];
 			let pinString = params[2];
 			let token = params[3];
 			let mode = params[4];
+			let pinStatus = params[5];
 			if (name == accessory.name) {
-				getBlynkvalue(name, widget, pinString, token, mode, null, subscription.characteristic, this.hapCharacteristic, this.platform);
+				getBlynkvalue(name, widget, pinString, token, mode, pinStatus, null, subscription.characteristic, this.hapCharacteristic, this.platform);
 			}
 		}
 	}
 }
 exports.Poller = Poller;
-function getBlynkvalue(name, widget, pinString, token, mode, callback, characteristic, Characteristic, platform) {
-	request(platform.config.serverurl + '/' + token + '/get/' + pinString, function (error, response, body) {
+function getBlynkvalue(name, widget, pinString, token, mode, pinStatus, callback, characteristic, Characteristic, platform) {
+	request(platform.config.serverurl + '/' + token + '/get/' + pinStatus, function (error, response, body) {
 		if (!error && response.statusCode == 200 && body != undefined) {
 			// console.log('Status:', response.statusCode);
 			// console.log('Headers:', JSON.stringify(response.headers));
 			// console.log('Response:', body);
 			function returnValue(r, callback, characteristic) {
 				if (callback) {
-					platform.log("Getting value for device: ", `${name}  parameter: ${characteristic.displayName}, value: ${r}`);
+					platform.log("Getting value for device: ", `${name}  parameter2: ${characteristic.displayName}, pinGet: ${pinStatus}, value: ${r}`);
 					callback(undefined, r);
 				}
 				else {
-					platform.log("Updating value for device: ", `${name}  parameter: ${characteristic.displayName}, value: ${r}`);
+					platform.log("Updating value for device: ", `${name}  parameter2: ${characteristic.displayName}, pinGet: ${pinStatus}, value: ${r}`);
 					characteristic.updateValue(r);
 				}
 			}
