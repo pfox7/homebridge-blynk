@@ -6,8 +6,9 @@ Homebridge plugin for the Blynk platform
 Follow the instruction in [homebridge](https://www.npmjs.com/package/homebridge) for the homebridge server installation.
 The plugin is published through [NPM](https://www.npmjs.com/package/homebridge-blynk) and should be installed "globally" by typing:
 
-    npm install -g homebridge-blynk
-    
+sudo git clone https://github.com/pfox7/homebridge-blynk.git
+sudo npm install -g 
+
 # Release notes
 Version 0.9.0
 + Complete rewriting in typescrypt and homebridge plugin 2.0 API
